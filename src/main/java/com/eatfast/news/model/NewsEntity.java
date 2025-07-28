@@ -61,7 +61,6 @@ public class NewsEntity {
     @Column(name = "status", nullable = false)
     private NewsStatus status;
 
-    // ★ 1. 在這裡新增 updateTime 欄位
     /**
      * 資料最後更新時間。
      * @UpdateTimestamp 會讓 Hibernate 在每次更新這筆資料時，
@@ -101,11 +100,11 @@ public class NewsEntity {
     public EmployeeEntity getEmployee() { return employee; }
     public void setEmployee(EmployeeEntity employee) { this.employee = employee; }
 
-    // ★ 2. 在這裡新增 updateTime 的 getter/setter
+    // 新增 updateTime 的 getter/setter
     public LocalDateTime getUpdateTime() { return updateTime; }
     public void setUpdateTime(LocalDateTime updateTime) { this.updateTime = updateTime; }
 
-    // ★ 3. 補上 imageUrl 的 getter/setter
+    // imageUrl 的 getter/setter
     public String getImageUrl() { return imageUrl; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
