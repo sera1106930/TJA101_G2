@@ -1,43 +1,17 @@
 
 package com.eatfast.announcement.model;
-
-// 引入關聯的父實體
 import com.eatfast.employee.model.EmployeeEntity;
 import com.eatfast.store.model.StoreEntity;
-// 引入共享的 Enum
 import com.eatfast.common.enums.AnnouncementStatus;
-
-// 引入 Jakarta Persistence 與 Validation API
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-
-// 引入 Hibernate 專屬功能註解
-
-
 import java.time.LocalDateTime;
 import java.util.Objects;
-
 import org.hibernate.annotations.CreationTimestamp;
 
-/*
- * ================================================================
- *  AnnouncementEntity.java (Enum 重構定版)
- * ================================================================
- * - 審查結論:
- * 1. 【結構重構】: 已移除內部的 `AnnouncementStatus` Enum 定義，並改為
- * 引用共享的 `com.eatfast.common.enums.AnnouncementStatus`，
- * 符合團隊決議，提升了程式碼的重用性與維護性。
- * 2. 【邏輯正確】:
- * - @ManyToOne: 與 Employee 和 Store 的多對一關聯均已正確配置。
- * - @CreationTimestamp: `createTime` 欄位正確使用此註解，確保僅在
- * 新增時寫入時間戳。
- * - @Enumerated(EnumType.ORDINAL): 遵照團隊決議，維持使用 ORDINAL 儲存。
- * 3. 【關聯完整】: 已在 EmployeeEntity 與 StoreEntity 中建立對應的 @OneToMany
- * 反向關聯，形成完整的雙向關係。
- */
 
 /**
  * 門市公告實體 (Announcement Entity)
@@ -68,7 +42,7 @@ public class AnnouncementEntity {
     @Column(name = "content", nullable = false, length = 5000)
     private String content;
 
-    @CreationTimestamp // 重點註記: 僅在新建時，由 Hibernate 自動寫入當前時間。
+    @CreationTimestamp //  僅在新建時，由 Hibernate 自動寫入當前時間。
     @Column(name = "create_time", nullable = false, updatable = false)
     private LocalDateTime createTime;
 
@@ -77,12 +51,12 @@ public class AnnouncementEntity {
     private LocalDateTime startTime;
 
     @NotNull(message = "公告下架時間不可為空")
-    @Future(message = "下架時間必須在未來") // 重點註記: Jakarta Validation 約束，確保日期合理性。
+    @Future(message = "下架時間必須在未來") // Jakarta Validation 約束，確保日期合理性。
     @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
 
     @NotNull(message = "狀態不可為空")
-    @Enumerated(EnumType.ORDINAL) // 遵照團隊決議，使用 ORDINAL
+    @Enumerated(EnumType.ORDINAL) 
     @Column(name = "status", nullable = false)
     private AnnouncementStatus status;
 
