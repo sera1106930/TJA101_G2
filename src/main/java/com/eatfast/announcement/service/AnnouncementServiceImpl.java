@@ -17,19 +17,19 @@ import com.eatfast.common.enums.AnnouncementStatus;
 @Service
 public class AnnouncementServiceImpl implements AnnouncementService {
 
-    // @Autowired 會請 Spring 幫我們把寫好的 Repository 物件自動放進來
+    // Spring 把寫好的 Repository 物件自動放進來
     @Autowired
     private AnnouncementRepository announcementRepository;
 
     @Override
     public List<AnnouncementEntity> findAll() {
-        // 直接呼叫 Repository 的方法
+        // 呼叫 Repository 的方法
         return announcementRepository.findAll();
     }
 
     @Override
     public Optional<AnnouncementEntity> findById(Long id) {
-        // 直接呼叫 Repository 的方法
+        // 呼叫 Repository 的方法
         return announcementRepository.findById(id);
     }
 
@@ -69,7 +69,6 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     /**
-     * 【已簡化】查詢目前所有上架且有效的公告。
      * 直接呼叫我們在 Repository 中寫好的 @Query 方法。
      */
     @Override
@@ -78,8 +77,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
     }
 
     /**
-     * 【已簡化】這是我們新的 search 方法。
-     * 它現在的工作變得很簡單：直接把從 Controller 收到的參數，
+     * 直接把從 Controller 收到的參數，
      * 原封不動地交給 Repository 裡我們剛寫好的那個萬用 @Query 方法去處理。
      */
     @Override
@@ -87,15 +85,12 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         return announcementRepository.search(title, status, startTime, endTime);
     }
 
-    /**
-     * 【已優化】發布公告的邏輯
-     */
-    // 在 AnnouncementServiceImpl.java 裡
+
 
     @Override
     @Transactional // 確保整個方法都在一個交易中
     public void publishById(Long id) {
-        // 1. 根據 ID 找到公告，如果找不到就拋出錯誤訊息
+        // 根據 ID 找到公告，如果找不到就拋出錯誤訊息
         //    Optional 是 Java 8 的語法，用來優雅地處理可能為 null 的情況
         Optional<AnnouncementEntity> announcementOpt = announcementRepository.findById(id);
 
@@ -104,13 +99,13 @@ public class AnnouncementServiceImpl implements AnnouncementService {
             // 如果有，就把它拿出來
             AnnouncementEntity announcement = announcementOpt.get();
 
-            // 3. ⭐ 核心邏輯：更新它的狀態
+            // ：更新它的狀態
             announcement.setStatus(AnnouncementStatus.ACTIVE);
 
-            // 4. ⭐ 直接呼叫 repository 的 save 方法來執行更新，這是最穩妥的方式
+            //  直接呼叫 repository 的 save 方法來執行更新，這是最穩妥的方式
             announcementRepository.save(announcement);
 
-            // 5. 在 Console 印出成功訊息，方便我們確認
+            //  在 Console 印出成功訊息
             System.out.println("====== DEBUG: ID = " + id + " 的公告狀態已更新為 ACTIVE，並已儲存。 ======");
 
         } else {
@@ -120,7 +115,7 @@ public class AnnouncementServiceImpl implements AnnouncementService {
         }
     }
 
-    // 這個方法在目前的 Controller 中沒有被直接使用，可以先保留
+    // 目前的 Controller 中沒有被直接使用，可以先保留
     @Override
     public List<AnnouncementEntity> findActiveAnnouncements(LocalDateTime now) {
         return announcementRepository.findByStartTimeBeforeAndEndTimeAfter(now, now);
