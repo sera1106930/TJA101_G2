@@ -32,7 +32,7 @@ public class FrontAnnouncementController {
     }
 
     /**
-     * listAll 的別名（可作為 /announcement/listAll 使用）
+     * 
      */
     @GetMapping("/listAll")
     public String listAllAlias(Model model) {
