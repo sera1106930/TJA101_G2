@@ -12,7 +12,6 @@ import java.util.Objects;
  * 顧客意見回饋實體 (Feedback Entity)
  * <p>
  * 此實體對應資料庫中的 `feedback` 表，用於儲存來自顧客的意見或問題。
- * (版本: 已移除 Foreign Key 關聯，由程式邏輯確保資料完整性)
  * </p>
  */
 @Entity
@@ -50,13 +49,13 @@ public class FeedbackEntity {
     private String content;
 
     @Column(name = "dining_time")
-    private LocalDateTime diningTime; // ✅ 型別改成 LocalDateTime
+    private LocalDateTime diningTime; //  型別改成 LocalDateTime
 
 
     @Column(name = "dining_store", length = 255) // 根據 DDL 調整長度
     private String diningStore;
 
-    // --- ★★★ 緊急應對新增欄位 (由此開始) ★★★ ---
+
 
     @Column(name = "status", length = 20)
     private String status;
@@ -70,7 +69,7 @@ public class FeedbackEntity {
     @Column(name = "processed_by_admin_id")
     private Long processedByAdminId;
 
-    // --- ★★★ 緊急應對新增欄位 (到此結束) ★★★ ---
+   
 
 
     //================================================================
@@ -131,11 +130,11 @@ public class FeedbackEntity {
         this.content = content;
     }
 
-    public LocalDateTime getDiningTime() { // ✅ Getter 回傳型別也要改
+    public LocalDateTime getDiningTime() { 
         return diningTime;
     }
 
-    public void setDiningTime(LocalDateTime diningTime) { // ✅ Setter 參數型別也要改
+    public void setDiningTime(LocalDateTime diningTime) { 
         this.diningTime = diningTime;
     }
 
