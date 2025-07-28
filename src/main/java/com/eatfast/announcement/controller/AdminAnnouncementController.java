@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
-@RequestMapping("/admin/announcement") // <<< 1. 修改後：加上 /admin 前綴，區分前後台
+@RequestMapping("/admin/announcement") // 加上 /admin 前綴，區分前後台
 public class AdminAnnouncementController {
 
     private final AnnouncementService announcementService;
@@ -58,10 +58,10 @@ public class AdminAnnouncementController {
         List<AnnouncementEntity> list = announcementService.findCurrentlyActive();
         model.addAttribute("announcements", list);
 
-        // 也把查詢欄位的狀態選項放回去，保持頁面完整
+        // 查詢欄位的狀態選項，保持頁面完整
         model.addAttribute("statusOptions", AnnouncementStatus.values());
 
-        // <<< 修改後：直接渲染視圖，把 model 裡的資料帶過去
+        //直接渲染視圖，把 model 裡的資料帶過去
         return "back-end/announcement/select_page_announcement";
     }
 
@@ -94,7 +94,7 @@ public class AdminAnnouncementController {
     @PostMapping("/save")
     public String saveAnnouncement(@ModelAttribute("announcement") AnnouncementEntity announcement,
                                    RedirectAttributes redirectAttributes) {
-        // 模擬登入使用者（未來應從 SecurityContextHolder 取得）
+        //模擬
         EmployeeEntity emp = new EmployeeEntity();
         emp.setEmployeeId(1L);
         StoreEntity store = new StoreEntity();
@@ -104,7 +104,7 @@ public class AdminAnnouncementController {
 
         announcementService.save(announcement);
         redirectAttributes.addFlashAttribute("successMessage", "公告已成功儲存！");
-        return "redirect:/admin/announcement/select_page_announcement"; // <<< 3. 修改後：同步 redirect 路徑
+        return "redirect:/admin/announcement/select_page_announcement"; //同步 redirect 路徑
     }
 
     // ==========================================================
@@ -119,7 +119,7 @@ public class AdminAnnouncementController {
     }
 
     // ==========================================================
-    // == ★★★ 唯一的刪除功能 ★★★
+    // == 刪除功能 
     // ==========================================================
 
     @PostMapping("/{id}/delete")
@@ -131,6 +131,6 @@ public class AdminAnnouncementController {
             redirectAttributes.addFlashAttribute("errorMessage", "刪除失敗：" + e.getMessage());
         }
         // 無論從哪個頁面刪除，都統一回到查詢主頁
-        return "redirect:/admin/announcement/select_page_announcement"; // <<< 4. 修改後：同步 redirect 路徑
+        return "redirect:/admin/announcement/select_page_announcement"; 
     }
 }
