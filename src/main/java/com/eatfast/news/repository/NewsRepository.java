@@ -13,7 +13,6 @@ import java.util.Optional;
 
 /**
  * 最新消息的資料存取層 (Repository)
- * <p>
  * 負責與資料庫的 `news` 資料表進行所有互動。
  * 繼承 JpaRepository 後，會自動擁有多數基本的 CRUD (新增、讀取、更新、刪除) 功能。
  */
