@@ -21,10 +21,10 @@ public class FeedbackListDto {
     private String status;
     private String diningStore;
 
-    // ✅ 只保留一個 LocalDateTime 型別的 diningTime
+    //  LocalDateTime 型別的 diningTime
     private LocalDateTime diningTime;
 
-    // 手動添加 getter 和 setter 方法以解決編譯錯誤
+    // 添加 getter 和 setter 方法
     public Long getFeedbackId() {
         return feedbackId;
     }
