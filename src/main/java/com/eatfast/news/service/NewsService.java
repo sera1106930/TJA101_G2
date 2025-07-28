@@ -16,14 +16,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-
-
 import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit; // TimeUnit 的 import
+import java.util.concurrent.TimeUnit; 
 
 @Service
 public class NewsService {
@@ -52,25 +50,25 @@ public class NewsService {
         this.objectMapper.registerModule(new Hibernate6Module());
     }
 
-    // --- 新增的 Redis 快取方法 ---
+    // --- Redis 快取方法 ---
 
     // 將 List<News> 改為 List<NewsEntity>
     public List<NewsEntity> getLatestNewsWithCache() {
         try {
-            // 1. 先查 Redis
+            //  先查 Redis
             String newsJson = redisTemplate.opsForValue().get(LATEST_NEWS_KEY);
 
             if (newsJson != null && !newsJson.isEmpty()) {
-                // 2. Cache Hit! Redis 有資料
+                // Cache Hit! Redis 有資料
                 System.out.println(">>> 從 Redis 快取讀取最新消息！");
                 return objectMapper.readValue(newsJson, new TypeReference<List<NewsEntity>>() {});
             } else {
-                // 3. Cache Miss! Redis 沒資料，查資料庫
+                //  Cache Miss! Redis 沒資料，查資料庫
                 System.out.println(">>> 從資料庫讀取最新消息...");
                 // 假設你的 Repository 有這個方法，用來取得前台要顯示的已發布新聞
                 List<NewsEntity> newsList = newsRepository.findActivePublishedNews(NewsStatus.PUBLISHED, LocalDateTime.now());
 
-                // 3.1. 存入 Redis，並設定 10 分鐘後過期
+                //  存入 Redis，並設定 10 分鐘後過期
                 redisTemplate.opsForValue().set(
                         LATEST_NEWS_KEY,
                         objectMapper.writeValueAsString(newsList), // 將 List 轉成 JSON 字串
@@ -108,7 +106,6 @@ public class NewsService {
     public NewsEntity updateNews(NewsEntity updatedNewsData, MultipartFile imageFile) {
         try {
             NewsEntity existingNews = findById(updatedNewsData.getNewsId());
-            // ... (省略更新欄位的程式碼)
             existingNews.setTitle(updatedNewsData.getTitle());
             existingNews.setContent(updatedNewsData.getContent());
             existingNews.setStatus(updatedNewsData.getStatus());
@@ -121,7 +118,7 @@ public class NewsService {
                 existingNews.setImageUrl(newImageUrl);
             }
             NewsEntity savedNews = newsRepository.save(existingNews);
-            clearCache(); // 更新後清除快取
+            clearCache(); 
             return savedNews;
         } catch (IOException e) {
             throw new RuntimeException("圖片儲存時發生錯誤", e);
@@ -131,10 +128,10 @@ public class NewsService {
     @Transactional
     public void deleteNewsById(Long newsId) {
         newsRepository.deleteById(newsId);
-        clearCache(); // 】刪除後清除快取
+        clearCache(); //刪除後清除快取
     }
 
-    // --- 其他方法 (保持不變) ---
+
 
     public List<NewsEntity> getAllNews() {
         return newsRepository.findAll();
@@ -149,7 +146,7 @@ public class NewsService {
     }
 
     public String saveImage(MultipartFile imageFile) throws IOException {
-        // ... (你的圖片儲存邏輯，保持不變)
+        
         if (imageFile == null || imageFile.isEmpty()) {
             return null;
         }
