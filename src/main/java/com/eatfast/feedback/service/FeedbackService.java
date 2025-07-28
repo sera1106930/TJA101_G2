@@ -40,13 +40,13 @@ public class FeedbackService {
             return List.of();
         }
 
-        // 2. 收集所有不重複的 memberId
+        // 2收集所有不重複的 memberId
         List<Long> memberIds = feedbacks.stream()
                 .map(FeedbackEntity::getMemberId)
                 .distinct()
                 .collect(Collectors.toList());
 
-        // 3. 一次性查詢所有相關的會員資料，並轉成 Map (ID -> 姓名) 以提升效能
+        // 一次性查詢所有相關的會員資料，並轉成 Map (ID -> 姓名)
         Map<Long, String> memberIdToNameMap = memberRepository.findAllById(memberIds).stream()
                 .collect(Collectors.toMap(MemberEntity::getMemberId, MemberEntity::getUsername));
 
@@ -93,7 +93,7 @@ public class FeedbackService {
         feedback.setStatus("已處理");
         feedback.setReplyContent(replyContent);
         feedback.setRepliedAt(LocalDateTime.now());
-        // processedByAdminId 可以在這裡設定
+        // processedByAdminId 這裡設定
         feedbackRepository.save(feedback);
     }
 
@@ -104,4 +104,4 @@ public class FeedbackService {
         return feedbackRepository.findById(id);
     }
 
-} // <--- 這個才是 FeedbackService class 真正的結尾
+} 
