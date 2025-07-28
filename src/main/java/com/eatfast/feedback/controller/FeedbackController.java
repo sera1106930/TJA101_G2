@@ -1,6 +1,6 @@
 package com.eatfast.feedback.controller;
 
-import com.eatfast.feedback.dto.FeedbackDTO; // ★ 引入我們建立的 DTO
+import com.eatfast.feedback.dto.FeedbackDTO; 
 import com.eatfast.feedback.dto.FeedbackListDto;
 import com.eatfast.feedback.model.FeedbackEntity;
 import com.eatfast.feedback.service.FeedbackService;
@@ -11,12 +11,12 @@ import com.eatfast.store.model.StoreEntity;
 import com.eatfast.store.service.StoreService;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
-import jakarta.validation.Valid; // ★ 引入 @Valid
+import jakarta.validation.Valid; 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult; // ★ 引入 BindingResult
+import org.springframework.validation.BindingResult; 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -54,13 +54,13 @@ public class FeedbackController {
             MemberEntity loggedInMember = memberService.getMemberById(memberId)
                     .orElseThrow(() -> new EntityNotFoundException("登入的會員不存在，ID: " + memberId));
 
-            // ★ 修正 #1：建立 FeedbackDTO 而不是 FeedbackEntity
+            // ：建立 FeedbackDTO
             FeedbackDTO feedbackDTO = new FeedbackDTO();
             // 將會員資料預先填入 DTO
             feedbackDTO.setMemberName(loggedInMember.getUsername());
             feedbackDTO.setContactPhone(loggedInMember.getPhone());
 
-            model.addAttribute("feedbackDTO", feedbackDTO); // ★ 修正 #2：將 DTO 物件傳給前端
+            model.addAttribute("feedbackDTO", feedbackDTO); // 將 DTO 物件傳給前端
             model.addAttribute("storeList", storeService.getAllStores()); // 傳遞門市列表
             List<StoreEntity> stores = storeService.getAllStores();
             System.out.println(">>> [除錯] 從 StoreService 抓到的門市數量: " + stores.size());
@@ -73,39 +73,39 @@ public class FeedbackController {
     }
 
     /**
-     * 處理意見回饋表單的提交 (已整合驗證功能)
+     * 處理意見回饋表單的提交 
      */
     @PostMapping("/submit")
     public String submitFeedback(@Valid @ModelAttribute("feedbackDTO") FeedbackDTO feedbackDTO,
                                  BindingResult bindingResult,
                                  HttpSession session,
                                  RedirectAttributes redirectAttributes,
-                                 Model model) { // ★ 新增 Model 參數以便在驗證失敗時使用
+                                 Model model) { // 新增 Model 參數以便在驗證失敗時使用
 
         Long memberId = (Long) session.getAttribute("loggedInMemberId");
         if (memberId == null) {
             return MemberViewConstants.REDIRECT_TO_MEMBER_LOGIN;
         }
 
-        // ★ 核心修改：先檢查驗證結果
+        // 修改：先檢查驗證結果
         if (bindingResult.hasErrors()) {
             System.out.println("表單驗證失敗，返回意見回饋頁面。");
-            // 如果驗證失敗，必須重新提供表單頁面所需的其他資料 (例如門市列表)
+            // 如果驗證失敗，必須重新提供表單頁面所需的其他資料 
             model.addAttribute("storeList", storeService.getAllStores());
             return "front-end/feedback/form"; // 返回表單頁面，Thymeleaf 會顯示錯誤訊息
         }
 
         // 如果驗證成功，才執行後續的儲存邏輯
         try {
-            // 從 DTO 取出資料，呼叫你的 service 方法
+            // 從 DTO 取出資料，呼叫 service 方法
             feedbackService.createFeedback(
                     memberId,
-                    feedbackDTO.getStoreId(),       // ✅ 正確：直接使用 getStoreId()
+                    feedbackDTO.getStoreId(),       // 直接使用 getStoreId()
                     feedbackDTO.getContactPhone(),
                     feedbackDTO.getFeedbackContent(),
                     feedbackDTO.getDiningTime(),
-                    null // ✅ 正確：因為已經傳遞了 storeId，原本需要 storeName 的參數現在可以傳 null
-                    // (或者，更好的方式是修改 createFeedback 方法，讓它不再需要這個多餘的參數)
+                    null // 已經傳遞了 storeId，原本需要 storeName 的參數現在可以傳 null
+                    // 
             );
             redirectAttributes.addFlashAttribute("successMessage", "您的意見已成功送出，感謝您的回饋！");
             return "redirect:/feedback/save";
