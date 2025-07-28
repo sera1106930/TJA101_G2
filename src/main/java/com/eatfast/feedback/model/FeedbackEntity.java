@@ -10,9 +10,9 @@ import java.util.Objects;
 
 /**
  * 顧客意見回饋實體 (Feedback Entity)
- * <p>
+ * 
  * 此實體對應資料庫中的 `feedback` 表，用於儲存來自顧客的意見或問題。
- * </p>
+ * 
  */
 @Entity
 @Table(name = "feedback")
@@ -30,10 +30,10 @@ public class FeedbackEntity {
     // --- 原有欄位 ---
 
     @Column(name = "member_id", nullable = false)
-    private Long memberId; // FK 已移除，改為 Long 型別
+    private Long memberId; 
 
     @Column(name = "store_id")
-    private Long storeId; // FK 已移除，改為 Long 型別
+    private Long storeId; 
 
     @CreationTimestamp
     @Column(name = "create_time", nullable = false, updatable = false)
