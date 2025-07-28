@@ -41,7 +41,7 @@ public class AdminNewsController {
     }
 
     /**
-     * ✅ 處理「查看」按鈕點擊，顯示單一消息詳情
+     *  處理「查看」按鈕點擊，顯示單一消息詳情
      */
     @GetMapping("/view/{id}")
     public String showNewsDetail(@PathVariable("id") Long newsId, Model model) {
