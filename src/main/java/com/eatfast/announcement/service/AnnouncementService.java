@@ -17,7 +17,7 @@ public interface AnnouncementService {
 
 	// 新增或更新
 	AnnouncementEntity save(AnnouncementEntity announcement);
-	void deleteAnnouncementById(Long id); // <-- 新增這個方法
+	void deleteAnnouncementById(Long id); 
 	// 刪除
 	void deleteById(Long id);
 
@@ -33,7 +33,7 @@ public interface AnnouncementService {
 	List<AnnouncementEntity> search(String title, AnnouncementStatus status, LocalDateTime startTime,
 			LocalDateTime endTime);
 
-	// 這是列出公告清單的方法
+	// 列出公告清單的方法
 	List<AnnouncementEntity> findCurrentlyActive();
 
 	default // 草稿方法
